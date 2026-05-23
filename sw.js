@@ -1,4 +1,4 @@
-const CACHE = 'career-growth-workshop-v2';
+const CACHE = 'career-growth-workshop-v3';
 const ASSETS = [
   '/',
   '/index.html',
@@ -11,6 +11,8 @@ const ASSETS = [
   '/resources.js',
   '/404.js',
   '/sitemap.xml',
+  '/og.png',
+  '/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', e => {

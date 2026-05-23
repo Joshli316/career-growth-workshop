@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Apple Touch Icon — Career Growth Workshop</title>
+<style>
+  :root {
+    --primary: #1f2937;
+    --primary-dark: #0f172a;
+    --accent: #d4a017;
+    --accent-light: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 360px; height: 360px; overflow: hidden; }
+  body {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  body::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 30%, rgba(212,160,23,0.15) 0%, transparent 60%);
+  }
+  .icon {
+    color: var(--accent);
+    width: 200px;
+    height: 200px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 4px 18px rgba(212,160,23,0.45));
+  }
+</style>
+</head>
+<body>
+  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+    <polyline points="16 7 22 7 22 13"></polyline>
+  </svg>
+</body>
+</html>
