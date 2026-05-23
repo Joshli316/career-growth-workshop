@@ -1,0 +1,1247 @@
+/* ─── CSS Custom Properties ─────────────────────────────── */
+:root {
+  --bg:           #fafaf9;
+  --surface:      #ffffff;
+  --primary:      #1f2937;
+  --primary-dark: #0f172a;
+  --primary-light:#e5e7eb;
+  --accent:       #d4a017;
+  --accent-text:  #92750e;
+  --accent-light: #fef9c3;
+  --text:         #18181b;
+  --text-sub:     #52525b;
+  --border:       #e7e5e4;
+  --shadow:       0 2px 12px rgba(31,41,55,0.08);
+  --radius-card:  8px;
+  --radius-activity: 12px;
+  --radius-btn:   8px;
+  --transition:   200ms ease;
+  /* Activity match-state colors (concrete vs vague wins) */
+  --concrete:       #047857;
+  --concrete-bg:    #d1fae5;
+  --concrete-dark:  #065f46;
+  --vague:          #b45309;
+  --vague-bg:       #fef3c7;
+  --vague-dark:     #92400e;
+}
+
+/* ─── Slide Transition ──────────────────────────────────── */
+@keyframes slideFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Language Visibility ───────────────────────────────── */
+body.zh .en { display: none !important; }
+body:not(.zh) .zh { display: none !important; }
+
+/* ─── Suppress focus ring on programmatic heading focus ─── */
+h1:focus:not(:focus-visible),
+h2:focus:not(:focus-visible) { outline: none; }
+[tabindex="-1"]:focus { outline: none; }
+
+/* ─── Explicit focus-visible for interactive elements ───── */
+.nav-btn:focus-visible,
+.reveal-btn:focus-visible,
+.lang-toggle:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+a:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Skip Link ─────────────────────────────────────────── */
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--primary);
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 100;
+  border-radius: 0 0 8px 0;
+}
+.skip-to-main:focus { left: 0; }
+
+/* ─── Noscript ──────────────────────────────────────────── */
+.noscript-msg {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); font-size: 1.25rem;
+  padding: 2rem; text-align: center;
+}
+
+/* ─── Header ────────────────────────────────────────────── */
+.slide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: var(--primary);
+  color: #fff;
+  flex-shrink: 0;
+  min-height: 44px;
+}
+.section-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  opacity: 0.9;
+}
+.slide-counter {
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.18);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* ─── Header Right Group ────────────────────────────────── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ─── Language Toggle ───────────────────────────────────── */
+.lang-toggle {
+  background: rgba(212,160,23,0.85);
+  color: #1f2937;
+  border: 1.5px solid rgba(212,160,23,1);
+  border-radius: var(--radius-btn);
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition);
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+.lang-toggle:hover { background: var(--accent); }
+
+/* ─── Slides Area ───────────────────────────────────────── */
+.slides-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── Slide Base ────────────────────────────────────────── */
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  overflow-y: auto;
+  padding: 32px 40px 24px;
+}
+.slide.active { display: flex; flex-direction: column; animation: slideFadeIn 220ms ease-out; }
+.slide-centered { align-items: center; text-align: center; }
+.slide-inner { width: 100%; max-width: 1100px; margin: 0 auto; }
+.slide-centered .slide-inner { display: flex; flex-direction: column; align-items: center; }
+
+/* ─── Title Slide ───────────────────────────────────────── */
+.title-slide {
+  background: radial-gradient(ellipse at 70% 30%, #374151 0%, var(--primary) 55%, var(--primary-dark) 100%);
+  justify-content: center;
+  color: #fff;
+}
+.title-slide .slide-inner { text-align: center; }
+.csc-name {
+  font-size: 18px;
+  font-weight: 500;
+  opacity: 0.82;
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+}
+.main-title {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.main-subtitle {
+  font-size: 32px;
+  font-weight: 400;
+  opacity: 0.92;
+  margin-bottom: 32px;
+}
+.date-line { font-size: 18px; opacity: 0.72; margin-bottom: 36px; }
+.start-hint {
+  display: inline-block;
+  font-size: 16px;
+  opacity: 0.85;
+  background: rgba(212,160,23,0.18);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(212,160,23,0.5);
+}
+
+/* ─── Topic Badge ───────────────────────────────────────── */
+.topic-badge svg { vertical-align: middle; }
+.topic-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-light);
+  color: var(--accent-text);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Slide Headings ────────────────────────────────────── */
+.zh-headline {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.en-subtitle {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-sub);
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+/* ─── Reveal Button ─────────────────────────────────────── */
+.reveal-btn {
+  background: var(--accent);
+  color: var(--primary-dark);
+  border: none;
+  border-radius: var(--radius-btn);
+  padding: 14px 32px;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, sans-serif;
+  margin-top: 12px;
+}
+.reveal-btn:hover { background: #b8860b; transform: translateY(-1px); }
+.reveal-btn:disabled { background: var(--border); color: var(--text-sub); cursor: not-allowed; transform: none; }
+
+/* ─── Agenda Grid ───────────────────────────────────────── */
+.agenda-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin-top: 8px;
+}
+.agenda-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.agenda-num {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.agenda-icon { display: block; margin: 0 auto 12px; color: var(--accent); }
+.agenda-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+.agenda-en { font-size: 16px; color: var(--text-sub); }
+
+/* ─── Generic Info Cards ────────────────────────────────── */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+.info-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-left: 5px solid var(--primary);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+.info-card.accent { border-left-color: var(--accent); }
+.info-card.warn { border-left-color: #b91c1c; }
+.info-card.good { border-left-color: var(--concrete); }
+.info-card-title {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+.info-card.warn .info-card-title { color: #b91c1c; }
+.info-card.good .info-card-title { color: var(--concrete-dark); }
+.info-card.accent .info-card-title { color: var(--accent-text); }
+.info-card-text {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.5;
+}
+.info-card-text strong { color: var(--primary-dark); }
+
+/* ─── Callout Rule ──────────────────────────────────────── */
+.tax-rule {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-card);
+  padding: 14px 18px;
+  width: 100%;
+}
+.tax-rule-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.tax-rule-en { font-size: 16px; color: var(--text-sub); line-height: 1.5; }
+
+/* ─── Slide 3 — Review Cycle Timeline ────────────────────── */
+.cycle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+.cycle-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.cycle-title-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.cycle-title-en {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 10px;
+}
+.cycle-desc {
+  font-size: 16px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.boss-criteria {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  width: 100%;
+}
+.criteria-title {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+.criteria-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 24px;
+  list-style: none;
+}
+.criteria-list li {
+  font-size: 17px;
+  color: var(--text);
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.4;
+}
+.criteria-list li::before {
+  content: "★";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+/* ─── Slide 4 — Wins Tracker ────────────────────────────── */
+.wins-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+.wins-phone {
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  border-radius: 18px;
+  padding: 18px 16px;
+  box-shadow: var(--shadow);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", monospace;
+}
+.wins-phone-header {
+  background: var(--primary);
+  color: var(--accent);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.wins-phone-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.wins-phone-list li {
+  background: var(--bg);
+  border-left: 4px solid var(--accent);
+  padding: 8px 12px;
+  font-size: 15px;
+  color: var(--text);
+  border-radius: 4px;
+  line-height: 1.4;
+}
+.wins-phone-list li::before {
+  content: "✓ ";
+  color: var(--concrete);
+  font-weight: 900;
+}
+.wins-rules {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.wins-rules-title {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 10px;
+}
+.wins-rules-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wins-rules-list li {
+  font-size: 16px;
+  color: var(--text);
+  padding-left: 26px;
+  position: relative;
+  line-height: 1.45;
+}
+.wins-rules-list li::before {
+  content: counter(rule);
+  counter-increment: rule;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  color: var(--primary-dark);
+  font-weight: 800;
+  font-size: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wins-rules-list { counter-reset: rule; }
+
+/* ─── Slide 5 — Concrete vs Vague (two-phase) ───────────── */
+.activity-slide { background: #f5f5f4; }
+.activity-slide .topic-badge {
+  background: var(--accent-light);
+  color: var(--accent-text);
+}
+.activity-slide .zh-headline,
+.activity-slide .en-subtitle {
+  color: var(--primary-dark);
+}
+
+.win-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 18px;
+}
+.win-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-activity);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  transition: border-color var(--transition), background var(--transition);
+  position: relative;
+  text-align: left;
+}
+.win-card-label {
+  display: inline-block;
+  background: var(--primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+.win-card-text {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.win-card-en {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.4;
+  font-style: italic;
+}
+.activity-slide[data-phase="answer"] .win-card.concrete {
+  border-color: var(--concrete);
+  background: var(--concrete-bg);
+}
+.activity-slide[data-phase="answer"] .win-card.concrete .win-card-label {
+  background: var(--concrete);
+}
+.activity-slide[data-phase="answer"] .win-card.concrete::after {
+  content: "✓";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--concrete);
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.activity-slide[data-phase="answer"] .win-card.vague {
+  border-color: var(--vague);
+  background: var(--vague-bg);
+}
+.activity-slide[data-phase="answer"] .win-card.vague .win-card-label {
+  background: var(--vague);
+}
+
+.activity-answer-box {
+  display: none;
+  width: 100%;
+  background: var(--surface);
+  border: 2px solid var(--concrete);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-top: 4px;
+  text-align: left;
+}
+.activity-answer-title {
+  font-weight: 800;
+  color: var(--concrete-dark);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.activity-answer-text {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.vote-prompt {
+  font-size: 18px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* ─── Slide 6 — When to Ask (timeline + warn) ───────────── */
+.timing-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+.timing-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.timing-card.go { border-top: 5px solid var(--concrete); }
+.timing-card.no { border-top: 5px solid #b91c1c; }
+.timing-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 900;
+}
+.timing-card.go .timing-icon { background: var(--concrete-bg); color: var(--concrete); }
+.timing-card.no .timing-icon { background: #fee2e2; color: #b91c1c; }
+.timing-title-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.timing-title-en { font-size: 14px; color: var(--text-sub); margin-bottom: 8px; }
+.timing-desc { font-size: 14px; color: var(--text); line-height: 1.45; }
+
+/* ─── Slide 7 — Script ──────────────────────────────────── */
+.script-block {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-left: 5px solid var(--accent);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  margin-bottom: 12px;
+}
+.script-step {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent-text);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.script-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 6px;
+}
+.script-en {
+  font-size: 17px;
+  color: var(--text-sub);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ─── Slide 8 — True/False Quiz ─────────────────────────── */
+.quiz-question {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-activity);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 820px;
+  box-shadow: var(--shadow);
+}
+.quiz-q-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.quiz-q-en { font-size: 16px; color: var(--text-sub); line-height: 1.4; }
+
+.answer-block {
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-activity);
+  padding: 16px 22px;
+  width: 100%;
+  max-width: 820px;
+  margin-bottom: 12px;
+  display: none;
+  text-align: left;
+}
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.verdict-false { background: #fdecea; color: #c62828; border: 2px solid #ef9a9a; }
+.verdict-true  { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; }
+.answer-explanation-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.answer-explanation-en {
+  font-size: 16px;
+  color: var(--text-sub);
+  line-height: 1.5;
+}
+.q2-block, .q3-block { display: none; width: 100%; max-width: 820px; }
+
+/* ─── Slide 9 — Relationships ───────────────────────────── */
+.rel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+.rel-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.rel-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+.rel-title-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.rel-title-en { font-size: 14px; color: var(--text-sub); margin-bottom: 8px; }
+.rel-desc { font-size: 15px; color: var(--text); line-height: 1.45; text-align: left; }
+
+/* ─── Slide 10 — Continuing Education ───────────────────── */
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+.edu-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.edu-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edu-name-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.edu-name-en {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+.edu-desc { font-size: 14px; color: var(--text); line-height: 1.5; }
+.edu-pill {
+  display: inline-block;
+  margin-top: 6px;
+  background: var(--accent-light);
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ─── Slide 11 — Stay vs Go ─────────────────────────────── */
+.stay-go {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+}
+.stay-col, .go-col {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.stay-col { border-top: 5px solid var(--concrete); }
+.go-col { border-top: 5px solid var(--accent); }
+.stay-go-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+.stay-go-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stay-col .stay-go-icon { background: var(--concrete-bg); color: var(--concrete); }
+.go-col .stay-go-icon { background: var(--accent-light); color: var(--accent-text); }
+.stay-go-title {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.stay-go-en {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+.stay-go-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.stay-go-list li {
+  font-size: 16px;
+  color: var(--text);
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.45;
+}
+.stay-col .stay-go-list li::before { content: "✓"; color: var(--concrete); position: absolute; left: 0; font-weight: 800; }
+.go-col .stay-go-list li::before { content: "→"; color: var(--accent-text); position: absolute; left: 0; font-weight: 800; }
+
+/* ─── Slide 12 — Services + Resources ───────────────────── */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.service-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 14px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.service-icon { display: flex; justify-content: center; margin-bottom: 8px; color: var(--accent-text); }
+.service-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.service-en { font-size: 14px; color: var(--text-sub); }
+.csc-cta {
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-card);
+  padding: 14px 24px;
+  text-align: center;
+  width: 100%;
+}
+.cta-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+.cta-en { font-size: 16px; opacity: 0.92; }
+.cta-address { font-size: 15px; opacity: 0.82; margin-top: 6px; }
+
+.qr-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 16px;
+  width: 100%;
+  max-width: 640px;
+}
+.qr-row #qr-container canvas,
+.qr-row #qr-container img { border-radius: 0; border: 3px solid var(--primary); }
+.qr-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+.qr-en { font-size: 15px; color: var(--text-sub); margin-bottom: 4px; }
+.qr-url { font-size: 14px; color: var(--accent-text); font-weight: 700; word-break: break-all; }
+.qr-url a { color: inherit; text-decoration: underline; cursor: pointer; pointer-events: auto; }
+.qr-url a:hover { opacity: 0.8; }
+
+.closing-msg {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: center;
+  margin-top: 18px;
+}
+.closing-msg .en-part {
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  display: block;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+/* ─── Footer / Navigation ───────────────────────────────── */
+.slide-footer {
+  flex-shrink: 0;
+  background: var(--surface);
+  border-top: 1.5px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background var(--transition), transform var(--transition);
+}
+.dot.done { background: var(--accent-light); }
+.dot.active { background: var(--primary); transform: scale(1.3); }
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.nav-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-btn);
+  width: 44px; height: 44px;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+  flex-shrink: 0;
+}
+.nav-btn:hover:not(:disabled) { background: var(--primary-dark); }
+.nav-btn:disabled { background: var(--border); cursor: not-allowed; }
+.nav-btn--home { width: 36px; height: 36px; background: var(--border); color: var(--text-sub); font-size: 16px; }
+.nav-btn--home:hover:not(:disabled) { background: var(--primary); color: #fff; }
+.key-hint { font-size: 13px; color: var(--text-sub); text-align: center; }
+
+/* ─── Print Styles (slide deck) ─────────────────────────── */
+@media print {
+  .slide-header, .slide-footer, .lang-toggle, .skip-to-main { display: none !important; }
+  body { overflow: visible; height: auto; }
+  .slides-area { overflow: visible; position: static; }
+  .slide { display: block !important; position: static !important; page-break-after: always; }
+}
+
+/* ─── Resources Page ────────────────────────────────────── */
+.resources-body {
+  overflow: visible;
+  height: auto;
+  min-height: 100vh;
+}
+.resources-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+.resources-header {
+  background: var(--primary);
+  color: #fff;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.resources-title-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--accent);
+}
+.resources-title-en { font-size: 16px; opacity: 0.85; margin-top: 4px; }
+.header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.btn-primary, .btn-ghost {
+  border-radius: var(--radius-btn);
+  padding: 9px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: background var(--transition), color var(--transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary { background: var(--accent); color: var(--primary-dark); border-color: var(--accent); }
+.btn-primary:hover { background: #b8860b; }
+.btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,0.5); }
+.btn-ghost:hover { background: rgba(255,255,255,0.15); }
+.btn-ghost:focus-visible, .btn-primary:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+.qr-top-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+}
+#qr-top canvas, #qr-top img { border-radius: 6px; border: 2px solid var(--primary); }
+.qr-top-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+.qr-top-en { font-size: 14px; color: var(--text-sub); margin-bottom: 6px; }
+.qr-top-url { font-size: 13px; color: var(--accent-text); font-weight: 700; }
+
+.resource-section { margin-bottom: 36px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary);
+}
+.section-num {
+  width: 32px; height: 32px;
+  background: var(--primary);
+  color: var(--accent);
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.section-title-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.section-title-en { font-size: 14px; color: var(--text-sub); }
+
+.res-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.res-table th {
+  background: var(--primary);
+  color: var(--accent);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 700;
+}
+.res-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.res-table tr:last-child td { border-bottom: none; }
+.res-table tr:nth-child(even) td { background: #f8f7f4; }
+.zh-cell {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+.en-cell { font-size: 16px; color: var(--text-sub); }
+.tip-cell { font-size: 15px; color: var(--accent-text); }
+
+.org-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.org-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-left: 5px solid var(--primary);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+.org-name-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+.org-name-en { font-size: 14px; color: var(--text-sub); margin-bottom: 8px; }
+.org-phone { font-size: 18px; font-weight: 800; color: var(--accent-text); margin-bottom: 4px; }
+.org-detail { font-size: 14px; color: var(--text-sub); line-height: 1.5; }
+.org-badge {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent-text);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+
+.phrase-row-zh {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+}
+.phrase-row-en { font-style: italic; font-size: 15px; }
+.phrase-row-note { font-size: 13px; color: var(--text-sub); }
+
+/* ─── Mobile Responsive (≤768px) ───────────────────────── */
+@media (max-width: 768px) {
+  .slide { padding: 20px 16px 16px; }
+  .slide-inner { max-width: 100%; }
+
+  .main-title    { font-size: 40px; }
+  .main-subtitle { font-size: 22px; }
+  .csc-name      { font-size: 15px; }
+  .date-line     { font-size: 15px; }
+  .start-hint    { font-size: 14px; }
+
+  .zh-headline { font-size: 32px; }
+  .en-subtitle { font-size: 17px; margin-bottom: 16px; }
+
+  .agenda-grid { grid-template-columns: 1fr; gap: 12px; }
+  .agenda-card { padding: 18px 16px; }
+  .agenda-zh   { font-size: 22px; }
+
+  .cycle-grid, .info-grid, .wins-grid, .edu-grid, .stay-go { grid-template-columns: 1fr; }
+  .criteria-list { grid-template-columns: 1fr; }
+  .timing-row { grid-template-columns: 1fr; }
+  .rel-grid { grid-template-columns: 1fr; }
+  .win-cards { grid-template-columns: 1fr; }
+
+  .info-card-title, .wins-rules-title, .criteria-title, .stay-go-title { font-size: 19px; }
+  .cycle-title-zh { font-size: 20px; }
+  .timing-title-zh { font-size: 19px; }
+  .rel-title-zh { font-size: 19px; }
+  .edu-name-zh { font-size: 19px; }
+  .script-zh { font-size: 19px; }
+  .quiz-q-zh { font-size: 21px; }
+  .answer-explanation-zh { font-size: 19px; }
+
+  .service-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .org-cards { grid-template-columns: 1fr; }
+  .res-table { font-size: 14px; }
+  .zh-cell { font-size: 16px; }
+}
+
+/* ─── Reduced Motion ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .slide.active { animation: none; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
