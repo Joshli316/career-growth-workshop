@@ -1,4 +1,4 @@
-const CACHE = 'career-growth-workshop-v4';
+const CACHE = 'career-growth-workshop-v5';
 const ASSETS = [
   '/',
   '/index.html',
